@@ -11,7 +11,7 @@ import { PaginateResult } from 'src/common/resource/paginate.response';
 import { PermissionModel } from './models/permission.model';
 import { PermissionService } from './permission.service';
 
-@ApiTags('permission')
+@ApiTags('Permission')
 @Controller('permission')
 export class PermissionController {
   constructor(private service: PermissionService) {}
