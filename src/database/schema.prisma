@@ -11,21 +11,21 @@ datasource db {
 }
 
 model Permission {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  RoleHasPermission RoleHasPermission[]
+  id        Int                 @id @default(autoincrement())
+  name      String
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  role      RoleHasPermission[]
 }
 
 model Role {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  isActive          Boolean
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  RoleHasPermission RoleHasPermission[]
-  UserHasRole       UserHasRole[]
+  id          Int                 @id @default(autoincrement())
+  name        String
+  isActive    Boolean
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  permissions RoleHasPermission[]
+  users       UserHasRole[]
 }
 
 model RoleHasPermission {
@@ -40,14 +40,14 @@ model RoleHasPermission {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  fullname    String
-  username    String?
-  email       String
-  password    String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  UserHasRole UserHasRole[]
+  id        Int           @id @default(autoincrement())
+  fullname  String
+  username  String?
+  email     String
+  password  String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  roles     UserHasRole[]
 }
 
 model UserHasRole {
