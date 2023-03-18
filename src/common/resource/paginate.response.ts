@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PaginateFilterDTO } from '../dto/paginate-filterdto';
+import { PaginateFilterDTO } from '../dto/paginate-filter.dto';
 
 interface PaginateFilterData {
   requestData: PaginateFilterDTO;
