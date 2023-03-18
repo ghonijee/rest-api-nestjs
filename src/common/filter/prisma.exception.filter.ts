@@ -15,9 +15,12 @@ export type ErrorCodesStatusMapping = {
 /**
  * {@link PrismaClientExceptionFilter}
  * catches {@link Prisma.PrismaClientKnownRequestError}
- * and {@link Prisma.NotFoundError} exceptions.
+ * and {@link Prisma.PrismaClientValidationError} exceptions.
  */
-@Catch(Prisma?.PrismaClientKnownRequestError, Prisma?.NotFoundError)
+@Catch(
+  Prisma?.PrismaClientKnownRequestError,
+  Prisma?.PrismaClientValidationError,
+)
 export class PrismaClientExceptionFilter extends BaseExceptionFilter {
   /**
    * default error codes mapping
@@ -57,18 +60,22 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
   catch(
     exception:
       | Prisma.PrismaClientKnownRequestError
-      | Prisma.NotFoundError
+      | Prisma.PrismaClientValidationError
       | any,
     host: ArgumentsHost,
   ) {
-    console.log(exception);
-
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       return this.catchClientKnownRequestError(exception, host);
     }
-    if (exception instanceof Prisma.NotFoundError) {
-      return this.catchNotFoundError(exception, host);
+
+    if (exception instanceof Prisma.PrismaClientValidationError) {
+      return this.catchPrismaClientValidationError(exception, host);
     }
+
+    super.catch(
+      new HttpException(exception, HttpStatus.INTERNAL_SERVER_ERROR),
+      host,
+    );
   }
 
   private catchClientKnownRequestError(
@@ -87,17 +94,18 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     super.catch(new HttpException({ statusCode, message }, statusCode), host);
   }
 
-  private catchNotFoundError(
-    { message }: Prisma.NotFoundError,
+  private catchPrismaClientValidationError(
+    exception: Prisma.PrismaClientValidationError,
     host: ArgumentsHost,
   ) {
-    const statusCode = HttpStatus.NOT_FOUND;
+    const statusCode = HttpStatus.BAD_REQUEST;
+    const message = this.exceptionShortMessage(exception.message);
 
-    super.catch(new HttpException({ statusCode, message }, statusCode), host);
+    super.catch(new HttpException(message, statusCode), host);
   }
 
   private exceptionShortMessage(message: string): string {
-    const shortMessage = message.substring(message.indexOf('→'));
+    const shortMessage = message.substring(message.indexOf('})'));
 
     return shortMessage
       .substring(shortMessage.indexOf('\n'))
