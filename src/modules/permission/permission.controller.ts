@@ -24,10 +24,6 @@ export class PermissionController {
   paginate(
     @Query() data: PaginateFilterDTO,
   ): Promise<PaginateResult<PermissionModel> | Error> {
-    try {
-      return this.service.findPaginate(data);
-    } catch (error) {
-      throw error;
-    }
+    return this.service.findPaginate(data);
   }
 }
