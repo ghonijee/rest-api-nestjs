@@ -1,8 +1,14 @@
 import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
-import { Permission } from '@prisma/client';
-import { PaginateFilterDTO } from 'src/common/dto/paginate-filterdto';
+import {
+  ApiBadRequestResponse,
+  ApiInternalServerErrorResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { ApiOkResponsePaginated } from 'src/common/decorator/api-ok-response-paginate.decorator';
+import { PaginateFilterDTO } from 'src/common/dto/paginate-filter.dto';
+import { ApiException } from 'src/common/resource/api.exception.response';
 import { PaginateResult } from 'src/common/resource/paginate.response';
+import { PermissionModel } from './models/permission.model';
 import { PermissionService } from './permission.service';
 
 @ApiTags('permission')
@@ -11,9 +17,13 @@ export class PermissionController {
   constructor(private service: PermissionService) {}
 
   @Get('/')
-  @ApiCreatedResponse({ type: PaginateResult<Permission> })
   @HttpCode(HttpStatus.OK)
-  paginate(@Query() data: PaginateFilterDTO) {
+  @ApiOkResponsePaginated(PermissionModel)
+  @ApiBadRequestResponse({ type: ApiException })
+  @ApiInternalServerErrorResponse({ type: ApiException })
+  paginate(
+    @Query() data: PaginateFilterDTO,
+  ): Promise<PaginateResult<PermissionModel> | Error> {
     try {
       return this.service.findPaginate(data);
     } catch (error) {
