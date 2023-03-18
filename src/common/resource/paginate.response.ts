@@ -45,8 +45,12 @@ export class PaginateMetaResult {
 }
 
 export class PaginateResult<T> {
+  @ApiProperty({
+    isArray: true,
+  })
   data: T[];
 
+  @ApiProperty()
   meta: PaginateMetaResult;
 
   constructor(data: T[], meta: PaginateMetaResult) {
