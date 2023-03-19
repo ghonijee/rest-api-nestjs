@@ -18,18 +18,8 @@ export class PermissionService {
       this.prisma.permission.findMany({
         skip: (data.page - 1) * data.limit,
         take: data.limit,
-        orderBy: {
-          [data.orderBy]: data.order,
-        },
-        where: {
-          name: { contains: data.filter },
-        },
       }),
-      this.prisma.permission.count({
-        where: {
-          name: { contains: data.filter },
-        },
-      }),
+      this.prisma.permission.count(),
     ]);
     return new PaginateResult<PermissionModel>(
       result,

@@ -1,6 +1,6 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsInt } from 'class-validator';
 import { toNumber } from '../helpers/cast.helper';
 
 export class PaginateFilterDTO {
@@ -23,18 +23,18 @@ export class PaginateFilterDTO {
   @IsInt()
   skip: number;
 
-  @IsString()
-  @IsOptional()
-  @ApiPropertyOptional()
-  filter?: string;
+  // @IsString()
+  // @IsOptional()
+  // @ApiPropertyOptional()
+  // filter?: string;
 
-  @IsString()
-  @IsOptional()
-  @ApiPropertyOptional()
-  orderBy?: string;
+  // @IsString()
+  // @IsOptional()
+  // @ApiPropertyOptional()
+  // orderBy?: string;
 
-  @IsString()
-  @IsOptional()
-  @ApiPropertyOptional()
-  order?: string;
+  // @IsString()
+  // @IsOptional()
+  // @ApiPropertyOptional()
+  // order?: string;
 }
