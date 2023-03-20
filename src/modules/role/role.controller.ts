@@ -8,8 +8,15 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiOkResponsePaginated } from 'src/common/decorator/api-ok-response-paginate.decorator';
+import { ApiException } from 'src/common/resource/api.exception.response';
+import { AssignPermissionRoleDTO } from './dto/assign-permission-role.dto';
 import { CreateRoleDTO } from './dto/create.role.dto';
 import { PaginateRoleDTO } from './dto/paginate.role.dto';
 import { UpdateRoleDTO } from './dto/update.role.dto';
@@ -29,8 +36,8 @@ export class RoleController {
 
   @Get(':id')
   @ApiOkResponse({ type: RoleModel })
-  show(@Param(':id') id: number) {
-    return this.service.find(id);
+  show(@Param('id') id: string) {
+    return this.service.find(+id);
   }
 
   @Post()
@@ -49,5 +56,12 @@ export class RoleController {
   @ApiOkResponse({ type: RoleModel })
   destroy(@Param(':id') id: number) {
     return this.service.destroy(id);
+  }
+
+  @ApiBadRequestResponse({ type: ApiException })
+  @ApiInternalServerErrorResponse({ type: ApiException })
+  @Post('/assign/permission')
+  assignPermissions(@Body() data: AssignPermissionRoleDTO) {
+    return this.service.assignPermissions(data);
   }
 }
