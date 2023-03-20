@@ -19,8 +19,14 @@ export async function permissionSeed(
   ];
 
   for (const permission of permissions) {
-    await prisma.permission.create({
-      data: {
+    await prisma.permission.upsert({
+      create: {
+        name: permission,
+      },
+      update: {
+        name: permission,
+      },
+      where: {
         name: permission,
       },
     });

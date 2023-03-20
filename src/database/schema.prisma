@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,51 +9,51 @@ datasource db {
 
 model Permission {
   id        Int                 @id @default(autoincrement())
-  name      String
+  name      String              @unique
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
   role      RoleHasPermission[]
+  users     User[]
+
+  @@map("permissions")
 }
 
 model Role {
   id          Int                 @id @default(autoincrement())
-  name        String
+  name        String              @unique
   isActive    Boolean
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
   permissions RoleHasPermission[]
-  users       UserHasRole[]
+  User        User[]
+
+  @@map("roles")
 }
 
 model RoleHasPermission {
-  role         Role       @relation(fields: [roleId], references: [id])
   roleId       Int
   permissionId Int
-  permission   Permission @relation(fields: [permissionId], references: [id])
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  role         Role       @relation(fields: [roleId], references: [id])
 
   @@id([roleId, permissionId])
+  @@map("role_has_permission")
 }
 
 model User {
-  id        Int           @id @default(autoincrement())
-  fullname  String
-  username  String?
-  email     String
-  password  String
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  roles     UserHasRole[]
-}
+  id           Int         @id @default(autoincrement())
+  fullname     String
+  username     String?     @unique
+  email        String      @unique
+  password     String
+  roleId       Int?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  permissionId Int?
+  Permission   Permission? @relation(fields: [permissionId], references: [id])
+  role         Role?       @relation(fields: [roleId], references: [id])
 
-model UserHasRole {
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  role      Role     @relation(fields: [roleId], references: [id])
-  roleId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@id([roleId, userId])
+  @@map("users")
 }
