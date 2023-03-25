@@ -48,14 +48,14 @@ export class RoleController {
 
   @Patch(':id')
   @ApiOkResponse({ type: RoleModel })
-  update(@Param(':id') id: number, @Body() data: UpdateRoleDTO) {
-    return this.service.update(id, data);
+  update(@Param(':id') id: string, @Body() data: UpdateRoleDTO) {
+    return this.service.update(+id, data);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: RoleModel })
-  destroy(@Param(':id') id: number) {
-    return this.service.destroy(id);
+  destroy(@Param(':id') id: string) {
+    return this.service.destroy(+id);
   }
 
   @ApiBadRequestResponse({ type: ApiException })
