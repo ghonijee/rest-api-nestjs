@@ -1,29 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { PaginateFilterDTO } from 'src/common/dto/paginate-filter.dto';
-import {
-  PaginateMetaResult,
-  PaginateResult,
-} from 'src/common/resource/paginate.response';
+import { IFindPaginate } from 'src/common/interfaces/service.interface';
 import { PrismaService } from 'src/common/services/prisma.service';
-import { PermissionModel } from './models/permission.model';
 
 @Injectable()
 export class PermissionService {
   constructor(private prisma: PrismaService) {}
 
-  async findPaginate(
-    data: PaginateFilterDTO,
-  ): Promise<PaginateResult<PermissionModel>> {
-    const [result, totalCount] = await this.prisma.$transaction([
+  async findPaginate(params: PaginateFilterDTO): Promise<IFindPaginate> {
+    const [data, totalCount] = await this.prisma.$transaction([
       this.prisma.permission.findMany({
-        skip: (data.page - 1) * data.limit,
-        take: data.limit,
+        skip: (params.page - 1) * params.limit,
+        take: params.limit,
       }),
       this.prisma.permission.count(),
     ]);
-    return new PaginateResult<PermissionModel>(
-      result,
-      new PaginateMetaResult({ requestData: data, totalCount: totalCount }),
-    );
+    return {
+      data,
+      totalCount,
+    };
   }
 }
