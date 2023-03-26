@@ -60,14 +60,14 @@ export class ApiResponsePaginateInterceptor<T>
             itemCount: response.totalCount,
             pageCount: Math.ceil(response.totalCount / requestExpress.limit),
             hasPreviousPage: requestExpress.page > 1,
-            previous: requestExpress.page > 1 ? requestExpress.page - 1 : null,
+            previous: requestExpress.page > 1 ? +requestExpress.page - 1 : null,
             hasNextPage:
               requestExpress.page <
               Math.ceil(response.totalCount / requestExpress.limit),
             next:
               requestExpress.page <
               Math.ceil(response.totalCount / requestExpress.limit)
-                ? requestExpress.page + 1
+                ? +requestExpress.page + 1
                 : null,
           },
           data: response.data,
