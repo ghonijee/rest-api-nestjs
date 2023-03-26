@@ -39,5 +39,23 @@ export class ResponseDefaultSerialization<T = Record<string, any>> {
   })
   message: string;
 
+  @ApiProperty({
+    name: 'data',
+    nullable: true,
+    description: 'Result data',
+    oneOf: [
+      {
+        type: 'array',
+        example: 'result data',
+      },
+      {
+        type: 'object',
+        example: {
+          en: 'This is test endpoint.',
+          id: 'Ini adalah endpoint test',
+        },
+      },
+    ],
+  })
   data?: T;
 }
