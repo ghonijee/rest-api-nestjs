@@ -1,6 +1,6 @@
 import { applyDecorators, Type } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
-import { PaginateResult } from '../resource/paginate.response';
+import { ResponsePaginateSerialization } from '../serialization/response.paging.serialization';
 
 /**
  * Decorator for generate scheme response for swagger API Docs
@@ -10,11 +10,11 @@ export const ApiOkResponsePaginated = <DataDto extends Type<unknown>>(
   dataDto: DataDto,
 ): MethodDecorator =>
   applyDecorators(
-    ApiExtraModels(PaginateResult, dataDto),
+    ApiExtraModels(ResponsePaginateSerialization, dataDto),
     ApiOkResponse({
       schema: {
         allOf: [
-          { $ref: getSchemaPath(PaginateResult) },
+          { $ref: getSchemaPath(ResponsePaginateSerialization) },
           {
             properties: {
               data: {
