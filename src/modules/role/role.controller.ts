@@ -19,6 +19,7 @@ import { ApiResponseMessageSuccess } from 'src/common/decorator/api-response-mes
 import { ApiResponsePaginate } from 'src/common/decorator/api-response-paginate.decorator';
 import { IFindPaginate } from 'src/common/interfaces/service.interface';
 import { ApiException } from 'src/common/resource/api.exception.response';
+import { ResponseDefaultSerialization } from 'src/common/serialization/response.default.serialization';
 import { AssignPermissionRoleDTO } from './dto/assign-permission-role.dto';
 import { CreateRoleDTO } from './dto/create.role.dto';
 import { PaginateRoleDTO } from './dto/paginate.role.dto';
@@ -53,20 +54,23 @@ export class RoleController {
   }
 
   @Patch(':id')
-  @ApiOkResponse({ type: RoleModel })
-  update(@Param(':id') id: string, @Body() data: UpdateRoleDTO) {
+  @ApiOkResponse({ type: ResponseDefaultSerialization<RoleModel> })
+  @ApiResponseMessageSuccess('Update role')
+  update(@Param('id') id: string, @Body() data: UpdateRoleDTO) {
     return this.service.update(+id, data);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: RoleModel })
-  destroy(@Param(':id') id: string) {
+  @ApiResponseMessageSuccess('Delete role')
+  destroy(@Param('id') id: string) {
     return this.service.destroy(+id);
   }
 
   @ApiBadRequestResponse({ type: ApiException })
   @ApiInternalServerErrorResponse({ type: ApiException })
   @Post('/assign/permission')
+  @ApiResponseMessageSuccess('Assignmen permission to role success')
   assignPermissions(@Body() data: AssignPermissionRoleDTO) {
     return this.service.assignPermissions(data);
   }
