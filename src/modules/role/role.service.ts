@@ -1,21 +1,16 @@
-import { Prisma } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
-import {
-  PaginateResult,
-  PaginateMetaResult,
-} from 'src/common/resource/paginate.response';
+import { IFindPaginate } from 'src/common/interfaces/service.interface';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { AssignPermissionRoleDTO } from './dto/assign-permission-role.dto';
 import { CreateRoleDTO } from './dto/create.role.dto';
 import { PaginateRoleDTO } from './dto/paginate.role.dto';
 import { UpdateRoleDTO } from './dto/update.role.dto';
-import { RoleModel } from './models/role.model';
 
 @Injectable()
 export class RoleService {
   constructor(readonly prisma: PrismaService) {}
 
-  async findPaginate(data: PaginateRoleDTO) {
+  async findPaginate(data: PaginateRoleDTO): Promise<IFindPaginate> {
     const [result, totalCount] = await this.prisma.$transaction([
       this.prisma.role.findMany({
         skip: data.skip,
@@ -24,10 +19,7 @@ export class RoleService {
       this.prisma.role.count(),
     ]);
 
-    return new PaginateResult<RoleModel>(
-      result,
-      new PaginateMetaResult({ requestData: data, totalCount: totalCount }),
-    );
+    return { data: result, totalCount };
   }
 
   async find(id: number) {

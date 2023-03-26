@@ -15,6 +15,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ApiOkResponsePaginated } from 'src/common/decorator/api-ok-response-paginate.decorator';
+import { ApiResponseMessageSuccess } from 'src/common/decorator/api-response-message.decorator';
+import { ApiResponsePaginate } from 'src/common/decorator/api-response-paginate.decorator';
+import { IFindPaginate } from 'src/common/interfaces/service.interface';
 import { ApiException } from 'src/common/resource/api.exception.response';
 import { AssignPermissionRoleDTO } from './dto/assign-permission-role.dto';
 import { CreateRoleDTO } from './dto/create.role.dto';
@@ -30,10 +33,12 @@ export class RoleController {
 
   @Get()
   @ApiOkResponsePaginated(RoleModel)
-  index(@Query() data: PaginateRoleDTO) {
+  @ApiResponsePaginate('list role with paginate')
+  index(@Query() data: PaginateRoleDTO): Promise<IFindPaginate> {
     return this.service.findPaginate(data);
   }
 
+  @ApiResponseMessageSuccess('Detail role')
   @Get(':id')
   @ApiOkResponse({ type: RoleModel })
   show(@Param('id') id: string) {
@@ -41,6 +46,7 @@ export class RoleController {
   }
 
   @Post()
+  @ApiResponseMessageSuccess('Create role')
   @ApiOkResponse({ type: RoleModel })
   store(@Body() data: CreateRoleDTO) {
     return this.service.create(data);
