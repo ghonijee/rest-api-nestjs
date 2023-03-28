@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ApiException {
+export class ExceptionDefaultSerialization {
   @ApiProperty()
   statusCode: number;
 
