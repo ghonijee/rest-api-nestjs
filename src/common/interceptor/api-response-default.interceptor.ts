@@ -10,10 +10,13 @@ import { Observable, map } from 'rxjs';
 import {
   RESPONSE_MESSAGE,
   RESPONSE_OK_STATUS,
+  RESPONSE_SERIALIZATION,
 } from '../constant/response.constant';
 import { IResponse } from '../interfaces/response.interface';
 import { ResponseDefaultSerialization } from '../serialization/response.default.serialization';
 import { Response } from 'express';
+import { ClassConstructor } from 'class-transformer/types/interfaces';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ApiResponseDefaultInterceptor<T>
@@ -38,6 +41,9 @@ export class ApiResponseDefaultInterceptor<T>
             RESPONSE_OK_STATUS,
             context.getHandler(),
           );
+          const classSerialization: ClassConstructor<any> = this.reflector.get<
+            ClassConstructor<any>
+          >(RESPONSE_SERIALIZATION, context.getHandler());
 
           // default response
           const statusCode: number = responseExpress.statusCode;
@@ -48,10 +54,9 @@ export class ApiResponseDefaultInterceptor<T>
             const { ...data } = response;
             let serialization = data;
 
-            serialization =
-              serialization && Object.keys(serialization).length > 0
-                ? serialization
-                : undefined;
+            if (classSerialization) {
+              serialization = plainToInstance(classSerialization, data);
+            }
 
             return {
               status: okStatus,

@@ -1,4 +1,9 @@
+import { ClassConstructor } from 'class-transformer/types/interfaces';
 import { Response } from 'express';
+
+export interface IResponseOptions<T> {
+  serialization: ClassConstructor<T>;
+}
 
 export interface IResponseMetadata {
   statusCode?: number;
