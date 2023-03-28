@@ -8,7 +8,7 @@ import { ApiOkResponsePaginated } from 'src/common/decorator/api-ok-response-pag
 import { ApiResponsePaginate } from 'src/common/decorator/api-response-paginate.decorator';
 import { PaginateFilterDTO } from 'src/common/dto/paginate-filter.dto';
 import { IFindPaginate } from 'src/common/interfaces/service.interface';
-import { ApiException } from 'src/common/resource/api.exception.response';
+import { ExceptionDefaultSerialization } from 'src/common/serialization/exception.default.serialization';
 import { PermissionModel } from './models/permission.model';
 import { PermissionService } from './permission.service';
 
@@ -21,8 +21,8 @@ export class PermissionController {
   @ApiResponsePaginate('list permission with paginate')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponsePaginated(PermissionModel)
-  @ApiBadRequestResponse({ type: ApiException })
-  @ApiInternalServerErrorResponse({ type: ApiException })
+  @ApiBadRequestResponse({ type: ExceptionDefaultSerialization })
+  @ApiInternalServerErrorResponse({ type: ExceptionDefaultSerialization })
   paginate(@Query() data: PaginateFilterDTO): Promise<IFindPaginate> {
     return this.service.findPaginate(data);
   }

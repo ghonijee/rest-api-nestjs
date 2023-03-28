@@ -18,7 +18,7 @@ import { ApiOkResponsePaginated } from 'src/common/decorator/api-ok-response-pag
 import { ApiResponseMessageSuccess } from 'src/common/decorator/api-response-message.decorator';
 import { ApiResponsePaginate } from 'src/common/decorator/api-response-paginate.decorator';
 import { IFindPaginate } from 'src/common/interfaces/service.interface';
-import { ApiException } from 'src/common/resource/api.exception.response';
+import { ExceptionDefaultSerialization } from 'src/common/serialization/exception.default.serialization';
 import { ResponseDefaultSerialization } from 'src/common/serialization/response.default.serialization';
 import { AssignPermissionRoleDTO } from './dto/assign-permission-role.dto';
 import { CreateRoleDTO } from './dto/create.role.dto';
@@ -67,8 +67,8 @@ export class RoleController {
     return this.service.destroy(+id);
   }
 
-  @ApiBadRequestResponse({ type: ApiException })
-  @ApiInternalServerErrorResponse({ type: ApiException })
+  @ApiBadRequestResponse({ type: ExceptionDefaultSerialization })
+  @ApiInternalServerErrorResponse({ type: ExceptionDefaultSerialization })
   @Post('/assign/permission')
   @ApiResponseMessageSuccess('Assignmen permission to role success')
   assignPermissions(@Body() data: AssignPermissionRoleDTO) {
