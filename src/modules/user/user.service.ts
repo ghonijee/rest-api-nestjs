@@ -54,7 +54,7 @@ export class UserService {
       throw new HttpException('User ID not found', HttpStatus.NOT_FOUND);
     }
 
-    if (await compare(data.oldPassword, user.password)) {
+    if (!(await compare(data.oldPassword, user.password))) {
       throw new HttpException('Old password is wrong', HttpStatus.FORBIDDEN);
     }
     const encrypPassword = await hash(
