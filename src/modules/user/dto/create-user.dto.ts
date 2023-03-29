@@ -7,7 +7,7 @@ import {
   IsStrongPassword,
   Validate,
 } from 'class-validator';
-import { UserUniqueValidation } from 'src/common/validation/user-unique.validation';
+import { UserUniqueValidation } from 'src/modules/user/validation/user-unique.validation';
 
 export class CreateUserDTO {
   @IsString()

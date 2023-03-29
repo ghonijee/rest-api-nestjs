@@ -6,21 +6,25 @@ import {
   IsString,
   Validate,
 } from 'class-validator';
-import { UserUniqueValidation } from 'src/common/validation/user-unique.validation';
+import { UserUniqueExceptValidation } from '../validation/user-unique-except.validation';
 
 export class UpdateUserDTO {
+  @ApiProperty()
+  @IsNumber()
+  id: number;
+
   @IsString()
   @ApiProperty({ example: 'superadmin user' })
   fullname: string;
 
   @IsString()
-  @Validate(UserUniqueValidation)
+  @Validate(UserUniqueExceptValidation)
   @IsOptional()
   @ApiProperty({ example: 'superadmin' })
   username: string;
 
   @IsEmail()
-  @Validate(UserUniqueValidation)
+  @Validate(UserUniqueExceptValidation)
   @ApiProperty({
     example: 'superadmin@mail.com',
   })
