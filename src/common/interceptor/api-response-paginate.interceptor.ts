@@ -10,11 +10,13 @@ import { Observable, map } from 'rxjs';
 import {
   RESPONSE_MESSAGE,
   RESPONSE_OK_STATUS,
+  RESPONSE_SERIALIZATION,
 } from '../constant/response.constant';
 import { Response } from 'express';
 import { ResponsePaginateSerialization } from '../serialization/response.paging.serialization';
 import { IFindPaginate } from '../interfaces/service.interface';
 import { PaginateFilterDTO } from '../dto/paginate-filter.dto';
+import { ClassConstructor, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ApiResponsePaginateInterceptor<T>
@@ -43,12 +45,20 @@ export class ApiResponsePaginateInterceptor<T>
           RESPONSE_OK_STATUS,
           context.getHandler(),
         );
+        const classSerialization: ClassConstructor<any> = this.reflector.get<
+          ClassConstructor<any>
+        >(RESPONSE_SERIALIZATION, context.getHandler());
 
         // default response
         const statusCode: number = responseExpress.statusCode;
 
         // response
         const response = (await responseData) as IFindPaginate;
+
+        let serialization = response.data;
+        if (classSerialization) {
+          serialization = plainToInstance(classSerialization, serialization);
+        }
 
         return {
           message: message,
@@ -70,7 +80,7 @@ export class ApiResponsePaginateInterceptor<T>
                 ? +requestExpress.page + 1
                 : null,
           },
-          data: response.data,
+          data: serialization,
         };
       }),
     );
