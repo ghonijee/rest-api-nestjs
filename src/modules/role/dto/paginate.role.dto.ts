@@ -5,6 +5,7 @@ import { toNumber } from 'src/common/helpers/cast.helper';
 
 export class PaginateRoleDTO {
   @ApiProperty({ default: 1 })
+  @IsOptional()
   @Transform(({ value }) => toNumber(value), {
     toClassOnly: true,
   })
@@ -12,6 +13,7 @@ export class PaginateRoleDTO {
   page: number;
 
   @ApiProperty({ default: 10 })
+  @IsOptional()
   @Transform(({ value }) => toNumber(value), {
     toClassOnly: true,
   })
@@ -21,6 +23,7 @@ export class PaginateRoleDTO {
   @ApiProperty({ default: 0 })
   @Transform(({ value }) => toNumber(value))
   @IsInt()
+  @IsOptional()
   skip: number;
 }
 
